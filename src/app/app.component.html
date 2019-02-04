@@ -1,0 +1,96 @@
+<form>
+  <div class="form-group">
+    <div class="input-group" [ngStyle]="{'text-align': 'right', 'padding-bottom': '10px'}">
+      <input type="text" class="form-control" name="searchString" placeholder="Type to search..." [(ngModel)]="searchString">
+    </div>
+  </div>
+</form>
+<kendo-grid [data]="gridData| searchFilter: searchString" [height]="500" [sortable]="{ allowUnsort: true,mode: 'single'}"
+  [sort]="sort" (sortChange)="sortChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)">
+
+  <kendo-grid-column field="Resident" title="Resident" width="200" [style]="{'white-space': 'nowrap'}"></kendo-grid-column>
+  <kendo-grid-column field="UnitName" title="Unit" width="100" [style]="{'white-space': 'nowrap'}"></kendo-grid-column>
+  <kendo-grid-column field="RoomBed" title="Room Bed" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="ADLdtFormatted" title="ADL Date/Time" width="150" [style]="{'white-space': 'nowrap'}"></kendo-grid-column>
+  <kendo-grid-column-group title="Bed Mobility" [width]="200" [headerClass]="{'text-center': true}">
+    <kendo-grid-column field="AdlMobility" title="Self" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"
+      [style]="{'white-space': 'nowrap', 'padding':'0'}">
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <span placement="top" [ngbPopover]="dataItem.IllogicalAdlMobilityReason" class="fill" [ngStyle]="{'background-color': dataItem.AdlMobilityStateBgColor, 'height':'100%'}"
+          [ngClass]="{'cursor bg-danger': dataItem.IllogicalAdlMobilityReason != ''}" [attr.title]="getToolTip(dataItem.MobilityInitsExist,dataItem.MobilityInits,dataItem.AdlMobilityState)">
+          {{dataItem.AdlMobility}}&nbsp;
+          <i class="k-icon adlvsmds-score-indicator" aria-hidden="true" [ngClass]="dataItem.AdlMobilityStateClass"></i>
+        </span>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="AdlMobilitySup" title="Support" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"
+      [style]="{'white-space': 'nowrap', 'padding':'0'}">
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <span placement="top" [ngbPopover]="dataItem.IllogicalAdlMobilityReason" class="fill" [ngStyle]="{'background-color': dataItem.AdlMobilitySupStateBgColor, 'height':'100%'}"
+          [ngClass]="{'cursor bg-danger': dataItem.IllogicalAdlMobilityReason != ''}" [attr.title]="getToolTip(dataItem.MobilitySupInitsExist,dataItem.MobilitySupInits,dataItem.AdlMobilitySupState)">
+          {{dataItem.AdlMobilitySup}}&nbsp;
+          <i class="k-icon adlvsmds-score-indicator" aria-hidden="true" [ngClass]="dataItem.AdlMobilitySupStateClass"></i>
+        </span>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid-column-group>
+  <kendo-grid-column-group title="Transfer" [width]="200" [headerClass]="{'text-center': true}">
+    <kendo-grid-column field="AdlTransferring" title="Self" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"
+      [style]="{'white-space': 'nowrap', 'padding':'0'}">
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <span placement="top" [ngbPopover]="dataItem.IllogicalAdlTransferringReason" class="fill" [ngStyle]="{'background-color': dataItem.AdlTransferringStateBgColor, 'height':'100%'}"
+          [ngClass]="{'cursor bg-danger': dataItem.IllogicalAdlTransferringReason != ''}" [attr.title]="getToolTip(dataItem.TransferringInitsExist,dataItem.TransferringInits,dataItem.AdlTransferringState)">
+          {{dataItem.AdlTransferring}}&nbsp;
+          <i class="k-icon adlvsmds-score-indicator" aria-hidden="true" [ngClass]="dataItem.AdlTransferringStateClass"></i>
+        </span>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="AdlTransferringSup" title="Support" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"
+      [style]="{'white-space': 'nowrap', 'padding':'0'}">
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <span placement="top" [ngbPopover]="dataItem.IllogicalAdlTransferringReason" class="fill" [ngStyle]="{'background-color': dataItem.AdlTransferringSupStateBgColor, 'height':'100%'}"
+          [ngClass]="{'cursor bg-danger': dataItem.IllogicalAdlTransferringReason != ''}" [attr.title]="getToolTip(dataItem.TransferringSupInitsExist,dataItem.TransferringSupInits,dataItem.AdlTransferringSupStateColor)">
+          {{dataItem.AdlTransferringSup}}&nbsp;
+          <i class="k-icon adlvsmds-score-indicator" aria-hidden="true" [ngClass]="dataItem.AdlTransferringSupStateClass"></i>
+        </span>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid-column-group>
+  <kendo-grid-column field="ScoreVariance" title="Score Variance" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="CurrentAdlRugsIV" title="ADL RUGs IV Score" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="AdlRugsIVDistribution" title="RUGs IV End-Split" [headerClass]="{'text-center': true}"
+    [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="CurrentMDSRugsIV" title="Last MDS ADL IV Score" [headerClass]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="MDSRugsIVDistribution" title="Last MDS ADL IV End-Split" [headerClass]="{'text-center': true}"
+    [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="CurrentAdlRugsIII" title="Current ADL RUGs III" [headerClass]="{'text-center': true}"
+    [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="CurrentMDSRugsIII" title="Last MDS RUGs III" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="MdsDt" title="MDS Date" [headerStyle]="{'white-space': 'nowrap', 'test-overflow': 'unset'}"
+    [style]="{'white-space': 'nowrap', 'text-overflow': 'unset'}" [format]="{ date: 'MM/dd/yyyy' }"></kendo-grid-column>
+  <kendo-grid-column field="DayLastMDS" title="# Days Since Last MDS" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"></kendo-grid-column>
+  <kendo-grid-column field="PayerName" title="Payer" [headerClass]="{'text-center': true}" [class]="{'text-center': true}"></kendo-grid-column>
+
+  <ng-template kendoGridDetailTemplate let-dataItem>
+    <tr style="background-color:#d3d3d3" exportstyle="background-color:#d3d3d3">
+      <td colspan="4" style="text-align: right; font-weight: bold;margin-right: 100px">Current MDS</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlMobilityStateBgColor}">{{dataItem.G0110A1}}</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlMobilitySupStateBgColor}">{{dataItem.G0110A2}}</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlTransferringStateBgColor}">{{dataItem.G0110B1}}</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlTransferringSupStateBgColor}">{{dataItem.G0110B2}}</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlEatingStateBgColor}">{{dataItem.G0110H1}}</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlEatingSupStateBgColor}">{{dataItem.G0110H2}}</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlToiletingStateBgColor}">{{dataItem.G0110I1}}</td>
+      <td class="text-center" [ngStyle]="{'background-color': dataItem.AdlToiletingSupStateBgColor}">{{dataItem.G0110I2}}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </ng-template>
+</kendo-grid>

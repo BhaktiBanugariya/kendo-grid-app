@@ -1,0 +1,18 @@
+.detail-button {
+    float: left;
+    padding-right: 5px;
+}
+tr .text-center{
+    text-align: center;
+}
+.ngb-popover-window {
+    position: absolute;
+    width: auto !important;
+    display: block !important;
+    background-color: #fafafa !important;
+    border: 1px solid #fafafa !important;
+    max-width: none !important;
+}
+.fill{
+    height:100%; width:100%;display:block;overflow:auto;padding: 0;margin: 0;
+}
